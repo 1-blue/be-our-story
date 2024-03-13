@@ -39,9 +39,15 @@ export class ImagesService {
     });
   }
 
-  async create({ id, name, url, status = "TEMP" }: CreateImageDto) {
+  async create({
+    id,
+    name,
+    url,
+    status = "TEMP",
+    purpose = "USER_PROFILE",
+  }: CreateImageDto) {
     return await this.prismaService.image.create({
-      data: { id, name, url, status },
+      data: { id, name, url, status, purpose },
     });
   }
 
