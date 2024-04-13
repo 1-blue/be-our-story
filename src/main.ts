@@ -1,11 +1,38 @@
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import * as cookieParser from "cookie-parser";
+import * as session from "express-session";
+import * as passport from "passport";
 
 import { AppModule } from "src/app.module";
 
 const bootstrap = async () => {
   try {
     const app = await NestFactory.create(AppModule);
+
+    // cors
+    app.enableCors({
+      credentials: true,
+      origin: [process.env.CLIENT_URL],
+    });
+
+    // cookie
+    app.use(cookieParser());
+
+    // session ( passport )
+    app.use(
+      session({
+        resave: false,
+        saveUninitialized: false,
+        secret: process.env.COOKIE_SECRET,
+        cookie: {
+          httpOnly: true,
+          sameSite: "lax",
+        },
+      }),
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     // DTO에서 정의된 값만 받도록 체크
     app.useGlobalPipes(

@@ -33,5 +33,43 @@ declare namespace NodeJS {
     readonly AWS_S3_BUCKET: string;
     /**  S3 기본 `URL` */
     readonly AWS_S3_BASE_URL: string;
+
+    /** 클라이언트 URL */
+    readonly CLIENT_URL: string;
+
+    /** OAuth로 로그인한 유저들의 비밀번호 */
+    readonly OAUTH_PASSWORD: string;
+
+    /** REST API Key */
+    readonly KAKAO_CLIENT_ID: string;
+    /** JavaScript Key */
+    readonly KAKAO_CLIENT_SECRET: string;
+    readonly KAKAO_CALLBACK_URL: string;
+
+    /** Client Id */
+    readonly GOOGLE_CLIENT_ID: string;
+    /** Client Secret Password */
+    readonly GOOGLE_CLIENT_SECRET: string;
+    readonly GOOGLE_CALLBACK_URL: string;
+
+    /**
+     * 구글 앱 이메일
+     * @deprecated 현재 네이버 메일 사용
+     **/
+    readonly GOOGLE_APP_EMAIL: string;
+    /**
+     * 구글 앱 비밀번호
+     * @deprecated 현재 네이버 메일 사용
+     **/
+    readonly GOOGLE_APP_PASSWORD: string;
+
+    /** 네이버 앱 이메일 */
+    readonly NAVER_APP_EMAIL: string;
+    /** 네이버 앱 비밀번호 */
+    readonly NAVER_APP_PASSWORD: string;
+    /** 네이버 `SMTP` 서버 이름 */
+    readonly NAVER_SMTP_SERVER_NAME: string;
+    /** 네이버 `SMTP` 서버 포트 */
+    readonly NAVER_SMTP_SERVER_PORT: string;
   }
 }
