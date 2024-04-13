@@ -9,7 +9,7 @@ import {
 import { Transform } from "class-transformer";
 import type { ImagePurpose, ImageStatus } from "@prisma/client";
 
-import { IMAGE_STATUSES } from "src/v1/images/constant";
+import { IMAGE_PURPOSE, IMAGE_STATUSES } from "src/v1/images/constant";
 
 export class CreateImageDto {
   @IsOptional()
@@ -30,7 +30,7 @@ export class CreateImageDto {
   status?: ImageStatus = "TEMP";
 
   @IsOptional()
-  @IsEnum(IMAGE_STATUSES, { message: "유효하지 않은 이미지 목적입니다." })
+  @IsEnum(IMAGE_PURPOSE, { message: "유효하지 않은 이미지 목적입니다." })
   @Transform(({ value }) => value.toUpperCase())
   purpose?: ImagePurpose = "USER_PROFILE";
 }

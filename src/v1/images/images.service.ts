@@ -204,13 +204,13 @@ export class ImagesService {
     filename,
     status = "temp",
   }: CreatePresignedURLDto) {
-    const [name, ext] = filename.split(".");
+    const [, ext] = filename.split(".");
 
     return await createPresignedPost(this.s3Client, {
       // 버킷명
       Bucket: process.env.AWS_S3_BUCKET,
       // 이미지 저장될 위치
-      Key: `images/${process.env.NODE_ENV}/${status}/${name}_${Date.now()}.${ext}`,
+      Key: `images/${process.env.NODE_ENV}/${status}/${Date.now()}.${ext}`,
       // 유효 기간 (초단위)
       Expires: 60,
       // 업로드될 파일 조건
