@@ -12,6 +12,17 @@ export class MyPassportSerializer extends PassportSerializer {
 
   /** [최초 로그인 시 실행] 세션에 저장해둘 값 지정 */
   serializeUser(user: User, done: CallableFunction) {
+    // 로컬 로그인이라면
+    if (user.provider === "LOCAL") {
+      this.usersService
+        .findOne({ id: user.id })
+        .then((exUser) => done(null, exUser.id))
+        .catch((error) => done(error));
+
+      return;
+    }
+
+    // OAuth 로그인이라면
     this.usersService
       .findOneByProviderId(user.providerId)
       // (oauth에서) 로그인했던 이력이 있다면 기존 아이디를 사용하고, 아니라면 생성할 아이디 사용

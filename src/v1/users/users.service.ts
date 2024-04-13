@@ -118,6 +118,8 @@ export class UsersService {
     });
 
     if (exUser) throw new ConflictException("이미 사용중인 이메일입니다.");
+
+    return {};
   }
 
   /** 닉네임 중복 검사 */
@@ -127,6 +129,8 @@ export class UsersService {
     });
 
     if (exUser) throw new ConflictException("이미 사용중인 닉네임입니다.");
+
+    return {};
   }
 
   /** 휴대폰 번호 중복 검사 */
@@ -136,6 +140,8 @@ export class UsersService {
     });
 
     if (exUser) throw new ConflictException("이미 사용중인 휴대폰 번호입니다.");
+
+    return {};
   }
 
   /** 이메일 & 비밀번호를 이용해서 유효한 유저인지 검증 */
@@ -172,5 +178,30 @@ export class UsersService {
     });
 
     return exUser;
+  }
+
+  /** 임시 계정 생성 */
+  async createEphemeral() {
+    const ephemeralPassword = String(Date.now());
+
+    // password 암호화
+    const hashedPassword = await encryptionValue(ephemeralPassword);
+
+    const createdUser = await this.prismaService.user.create({
+      data: {
+        email: `${ephemeralPassword}@nosvc.com`,
+        nickname: `손님_${ephemeralPassword.slice(ephemeralPassword.length - 4)}`,
+        password: hashedPassword,
+        money: 1_000,
+        role: "GUEST",
+        provider: "LOCAL",
+      },
+      select: this.userSelectWithoutPassword,
+    });
+
+    return {
+      ...createdUser,
+      password: ephemeralPassword,
+    };
   }
 }

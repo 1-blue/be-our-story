@@ -75,4 +75,10 @@ export class UsersController {
   validate(@Body() validateUserDto: ValidateUserDto) {
     return this.usersService.validate(validateUserDto);
   }
+
+  /** 임시 계정 생성 */
+  @Post("/ephemeral")
+  createEphemeral() {
+    return this.usersService.createEphemeral();
+  }
 }

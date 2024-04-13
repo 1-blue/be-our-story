@@ -21,17 +21,19 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // ==================== local login ====================
-  @UseGuards(IsLoggedOut)
   @UseGuards(LocalAuthGuard)
+  @UseGuards(IsLoggedOut)
   @Post("login")
   @HttpCode(200)
-  async login(@Req() req: Request) {
-    return req.user;
+  async login(@Req() req: Request, @Res() res: Response) {
+    res.cookie("nosvc_logged_in", "로그인");
+
+    return res.json(req.user);
   }
 
   // ==================== kakao login ====================
-  @UseGuards(IsLoggedOut)
   @UseGuards(KakaoAuthGuard)
+  @UseGuards(IsLoggedOut)
   @Get("login/kakao")
   async oauthKakao() {
     // `KakaoAuthGuard` 에서 로직을 처리하고 응답값을 `login/kakao/redirect`로 보냄
@@ -49,12 +51,15 @@ export class AuthController {
     res.cookie("accessToken", req.user.accessToken);
     res.cookie("refreshToken", req.user.refreshToken);
 
+    // 자체적으로 로그인 확인을 위한 쿠키
+    res.cookie("nosvc_logged_in", "로그인");
+
     return res.redirect(process.env.CLIENT_URL + "/oauth/redirect");
   }
 
   // ==================== google login ====================
-  @UseGuards(IsLoggedOut)
   @UseGuards(GoogleAuthGuard)
+  @UseGuards(IsLoggedOut)
   @Get("login/google")
   async oauthGoogle() {
     // `GoogleAuthGuard` 에서 로직을 처리하고 응답값을 `login/google/redirect`로 보냄
@@ -72,13 +77,16 @@ export class AuthController {
     res.cookie("accessToken", req.user.accessToken);
     res.cookie("refreshToken", req.user.refreshToken);
 
+    // 자체적으로 로그인 확인을 위한 쿠키
+    res.cookie("nosvc_logged_in", "로그인");
+
     return res.redirect(process.env.CLIENT_URL + "/oauth/redirect");
   }
 
   @UseGuards(IsLoggedIn)
   @Post("logout")
   @HttpCode(200)
-  logout(@Req() req: Request, @Res() res: Response): void {
+  logout(@Req() req: Request, @Res() res: Response) {
     const { accessToken } = req.cookies;
 
     try {
@@ -103,11 +111,12 @@ export class AuthController {
       res.clearCookie("connect.sid");
       res.clearCookie("accessToken");
       res.clearCookie("refreshToken");
+      res.clearCookie("nosvc_logged_in");
       req.session.destroy((error) => {
         console.error("[Error] req.session.destroy() >> ", error);
       });
 
-      res.send();
+      res.json({});
     });
   }
 }
